@@ -1,3 +1,5 @@
+// @TODO: modify readme
+
 # ZFDebug - a debug bar for Zend Framework
 ZFDebug is a plugin for the Zend Framework for PHP5, providing useful debug information displayed in a small bar at the bottom of every page.
 
