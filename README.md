@@ -1,3 +1,5 @@
+// @TODO: modify readme
+
 # ZFDebug - a debug bar for Zend Framework
 ZFDebug is a plugin for the Zend Framework for PHP5, providing useful debug information displayed in a small bar at the bottom of every page.
 
@@ -40,6 +42,7 @@ folder. Then add the following method to your bootstrap class (in ZF1.8+):
 	    $frontController->registerPlugin($debug);
 	}
 
+<<<<<<< HEAD
 Doctrine2 Plugin
 ------------
 
@@ -78,3 +81,6 @@ Here is example configuration for using the Doctrine2 Plugin:
 
 
 Further documentation will follow as the github move progresses.
+=======
+Further documentation will follow as the github move progresses.
+>>>>>>> session-plugin
