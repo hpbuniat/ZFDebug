@@ -17,7 +17,7 @@
  * @copyright  Copyright (c) 2008-2009 ZF Debug Bar Team (http://code.google.com/p/zfdebug)
  * @license    http://code.google.com/p/zfdebug/wiki/License     New BSD License
  */
-class ZFDebug_Controller_Plugin_Debug_Plugin_Session extends ZFDebug_Controller_Plugin_Debug_Plugin
+class ZFDebug_Controller_Plugin_Debug_Plugin_Constants extends ZFDebug_Controller_Plugin_Debug_Plugin
     implements ZFDebug_Controller_Plugin_Debug_Plugin_Interface {
 
     /**
@@ -25,7 +25,18 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_Session extends ZFDebug_Controller_
      *
      * @var string
      */
-    protected $_identifier = 'session';
+    protected $_identifier = 'constants';
+
+    /**
+     * @var Zend_Controller_Request_Abstract
+     */
+    protected $_request;
+
+    /**
+     *
+     * @var array
+     */
+    protected $_userConstants;
 
     /**
      * Create ZFDebug_Controller_Plugin_Debug_Plugin_Variables
@@ -62,7 +73,12 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_Session extends ZFDebug_Controller_
      */
     public function getTab() {
 
-        return ' Session';
+        //pseudo constructor to catch more constants
+        $constants            = get_defined_constants(true);
+        $this->_userConstants = $constants['user'];
+
+        $count = count($this->_userConstants);
+        return "Constants ($count)";
     }
 
     /**
@@ -72,65 +88,22 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_Session extends ZFDebug_Controller_
      */
     public function getPanel() {
 
+        $this->_request = Zend_Controller_Front::getInstance()->getRequest();
+        $viewRenderer   = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer');
+
         $vars = '<div style="width:50%;float:left;">';
+        $vars .= '<h4>Constants</h4>';
+        $vars .= '<div id="ZFDebug_Constants" style="margin-left:-22px">';
+        $vars .= '<div class="pre">';
 
-        $sessions = $_SESSION;
-
-        foreach ($sessions as $key => $session) {
-            $vars .= '<h4><b>' . $key . '</h4>';
-            $vars .= '<div id="ZFDebug_cookie" style="margin-left:-22px">' . $this->_cleanData($session) . '</div>';
+        foreach ($this->_userConstants as $constant => $value) {
+            $vars .= $constant . " => " . print_r($value, true);
+            $vars .= '<br />';
         }
 
+        $vars .= '</div></div>';
         $vars .= '</div><div style="clear:both">&nbsp;</div>';
 
         return $vars;
-    }
-
-    /**
-     * Transforms data into readable format
-     *
-     * @param array $values
-     *
-     * @return string
-     */
-    protected function _cleanData($values) {
-
-        $linebreak = $this->getLinebreak();
-
-        if (is_array($values) === true) {
-            ksort($values);
-        }
-        else {
-            $values = array();
-        }
-
-        $retVal = '<div class="pre">';
-        foreach ($values as $key => $value) {
-            $key = htmlspecialchars($key);
-            if (is_numeric($value)) {
-                $retVal .= $key . ' => ' . $value . $linebreak;
-            }
-            else if (is_string($value)) {
-                $retVal .= $key . ' => \'' . htmlspecialchars($value) . '\'' . $linebreak;
-            }
-            else if (is_array($value)) {
-                $retVal .= $key . ' => ' . self::_cleanData($value);
-            }
-            else if (is_object($value)) {
-                $retVal .= get_class($value) . ' Object():' . $linebreak;
-
-                $array = array();
-                foreach ($value as $member => $data) {
-                    $array[$member] = $data;
-                }
-
-                $retVal .= $key . ' => ' . self::_cleanData($array);
-            }
-            else if (is_null($value)) {
-                $retVal .= $key . ' => NULL' . $linebreak;
-            }
-        }
-
-        return $retVal . '</div>';
     }
 }

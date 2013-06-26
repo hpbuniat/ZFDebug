@@ -17,10 +17,9 @@
  * @copyright  Copyright (c) 2008-2009 ZF Debug Bar Team (http://code.google.com/p/zfdebug)
  * @license    http://code.google.com/p/zfdebug/wiki/License     New BSD License
  */
-class ZFDebug_Controller_Plugin_Debug_Plugin_File 
-    extends ZFDebug_Controller_Plugin_Debug_Plugin 
-    implements ZFDebug_Controller_Plugin_Debug_Plugin_Interface
-{
+class ZFDebug_Controller_Plugin_Debug_Plugin_File extends ZFDebug_Controller_Plugin_Debug_Plugin
+    implements ZFDebug_Controller_Plugin_Debug_Plugin_Interface {
+
     /**
      * Contains plugin identifier name
      *
@@ -61,16 +60,20 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_File
      * Your own library extension(s)
      *
      * @param array $options
+     *
      * @return void
      */
-    public function __construct(array $options = array())
-    {
+    public function __construct(array $options = array()) {
+
         isset($options['base_path']) || $options['base_path'] = $_SERVER['DOCUMENT_ROOT'];
         isset($options['library']) || $options['library'] = null;
-        
+
         $this->_basePath = realpath($options['base_path']);
         is_array($options['library']) || $options['library'] = array($options['library']);
-        $this->_library = array_merge($options['library'], array('Zend', 'ZFDebug'));
+        $this->_library = array_merge($options['library'], array(
+            'Zend',
+            'ZFDebug'
+        ));
     }
 
     /**
@@ -78,18 +81,18 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_File
      *
      * @return string
      */
-    public function getIdentifier()
-    {
+    public function getIdentifier() {
+
         return $this->_identifier;
     }
-    
+
     /**
      * Returns the base64 encoded icon
      *
      * @return string
      **/
-    public function getIconData()
-    {
+    public function getIconData() {
+
         return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAADPSURBVCjPdZFNCsIwEEZHPYdSz1DaHsMzuPM6RRcewSO4caPQ3sBDKCK02p+08DmZtGkKlQ+GhHm8MBmiFQUU2ng0B7khClTdQqdBiX1Ma1qMgbDlxh0XnJHiit2JNq5HgAo3KEx7BFAM/PMI0CDB2KNvh1gjHZBi8OR448GnAkeNDEDvKZDh2Xl4cBcwtcKXkZdYLJBYwCCFPDRpMEjNyKcDPC4RbXuPiWKkNABPOuNhItegz0pGFkD+y3p0s48DDB43dU7+eLWes3gdn5Y/LD9Y6skuWXcAAAAASUVORK5CYII=';
     }
 
@@ -98,8 +101,8 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_File
      *
      * @return string
      */
-    public function getTab()
-    {
+    public function getTab() {
+
         return count($this->_getIncludedFiles()) . ' Files';
     }
 
@@ -108,17 +111,17 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_File
      *
      * @return string
      */
-    public function getPanel()
-    {
+    public function getPanel() {
+
         $linebreak = $this->getLinebreak();
-        $included = $this->_getIncludedFiles();
-        $html = '<h4>' . count($included).' files included worth ';
-        $size = 0;
+        $included  = $this->_getIncludedFiles();
+        $html      = '<h4>' . count($included) . ' files included worth ';
+        $size      = 0;
         foreach ($included as $file) {
             $size += filesize($file);
         }
-        $html .= round($size/1024, 1).'K</h4>';
-        
+        $html .= round($size / 1024, 1) . 'K</h4>';
+
         // $html .= 'Basepath: ' . $this->_basePath .$linebreak;
 
         $libraryFiles = array();
@@ -140,7 +143,7 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_File
                 }
             }
             if (!$inUserLib) {
-                $html .= $file .$linebreak;
+                $html .= $file . $linebreak;
             }
         }
 
@@ -154,8 +157,8 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_File
      *
      * @return array
      */
-    protected function _getIncludedFiles()
-    {
+    protected function _getIncludedFiles() {
+
         if (null !== $this->_includedFiles) {
             return $this->_includedFiles;
         }
